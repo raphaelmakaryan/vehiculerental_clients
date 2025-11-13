@@ -67,7 +67,7 @@ public class WebAppController {
         try {
             Map<String, Object> response = new HashMap<>();
             String codeAlpha = client.getNumber_license();
-            String verifyLicense = "http://localhost:8085/licenses/" + codeAlpha;
+            String verifyLicense = "http://localhost:8086/licenses/" + codeAlpha;
             RestTemplate restTemplate = new RestTemplate();
             boolean result = restTemplate.getForObject(verifyLicense, Boolean.class);
             if (result) {
