@@ -1,10 +1,15 @@
 package fr.vehiclerental.clients.service;
 
 import fr.vehiclerental.clients.entity.Client;
+import fr.vehiclerental.clients.exception.LicenseExisted;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class ClientService {
@@ -12,7 +17,38 @@ public class ClientService {
     @Autowired
     ClientDao clientDao;
 
+    /**
+     * Methode qui appellera l'api Licenses
+     * @param idLicense License du client en string
+     * @return Vrai ou faux
+     */
+    public boolean requestLicense(String idLicense) {
+        String verifyLicense = "http://localhost:8086/licenses/" + idLicense;
+        RestTemplate restTemplate = new RestTemplate();
+        return restTemplate.getForObject(verifyLicense, Boolean.class);
+    }
 
+    /**
+     * Méthode pour crée un client
+     * @param client Information du client
+     * @param clientDao DAO de Client
+     * @return Vrai ou faux
+     */
+    public boolean createClient(Client client, ClientDao clientDao) {
+        if (requestLicense(client.getNumber_license())) {
+            clientDao.save(client);
+            return true;
+        } else {
+            throw new LicenseExisted();
+        }
+    }
+
+    /**
+     * Méthode de modification d'un client
+     * @param findindClient Client trouvé
+     * @param clientBodyRequest Information du client donné via la requete
+     * @param clientDao DAO de Client
+     */
     public void editClientService(Client findindClient, Client clientBodyRequest, ClientDao clientDao) {
         findindClient.setFirstName(clientBodyRequest.getFirstName());
         findindClient.setLastName(clientBodyRequest.getLastName());
@@ -62,14 +98,13 @@ public class ClientService {
         clientDao.save(client);
     }
 
+    /**
+     * Méthode pour crée des faux clients
+     */
     public void saveInitialData() {
         createClientFake();
         createClientFake2();
         createClientFake3();
         createClientFake4();
-    }
-
-    public void createClient(Client client, ClientDao clientDao) {
-        clientDao.save(client);
     }
 }

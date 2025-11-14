@@ -27,4 +27,16 @@ public class GlobalExceptionHandler {
         ErrorEntity error = new ErrorEntity(LocalDateTime.now(), exception.getMessage(), HttpStatus.NOT_FOUND.value());
         return ResponseEntity.status(HttpStatus.FORBIDDEN.value()).body(error);
     }
+
+    @ExceptionHandler(ClientNotAdd.class)
+    public ResponseEntity<ErrorEntity> clientNotAdd(ClientNotAdd exception) {
+        ErrorEntity error = new ErrorEntity(LocalDateTime.now(), exception.getMessage(), HttpStatus.NOT_FOUND.value());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN.value()).body(error);
+    }
+
+    @ExceptionHandler(LicenseExisted.class)
+    public ResponseEntity<ErrorEntity> licenseExisted(LicenseExisted exception) {
+        ErrorEntity error = new ErrorEntity(LocalDateTime.now(), exception.getMessage(), HttpStatus.NOT_FOUND.value());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN.value()).body(error);
+    }
 }
