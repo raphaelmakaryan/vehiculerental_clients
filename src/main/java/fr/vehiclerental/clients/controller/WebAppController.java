@@ -42,14 +42,14 @@ public class WebAppController {
     }
 
     @Operation(summary = "Voir tous les clients de la base de données ", description = "Requête pour la récupération de tous les clients de la base de données ")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Opération réussi", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ClientDTO.class))), @ApiResponse(responseCode = "405", description = "Échec de l'opération ", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "{\"error\": \"Saisie invalide\"}")))})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Opération réussi", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ClientDTO.class)))})
     @GetMapping("/clients")
     public List<ClientDTO> clientsJPA() {
         return clientDao.findAll().stream().map(c -> new ClientDTO(c.getId(), c.getFirst_name(), c.getLast_name(), c.getNumberLicense(), c.getBirthday(), c.getObtaining_license())).collect(Collectors.toList());
     }
 
     @Operation(summary = "Voir un client spécifique de la base de données", description = "Requête pour la récupération d'un client de la base de données")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Opération réussi", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ClientDTO.class))), @ApiResponse(responseCode = "405", description = "Échec de l'opération ", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "{\"error\": \"Saisie invalide\"}")))})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Opération réussi", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ClientDTO.class))), @ApiResponse(responseCode = "405", description = "Échec de l'opération ", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ClientNotFindException.class)))})
     @RequestMapping(path = "/clients/{id}", method = RequestMethod.GET)
     public List<ClientDTO> getClients(@Parameter(description = "Identifiant du compte du client", required = true) @PathVariable(value = "id") int id) {
         try {
@@ -60,7 +60,7 @@ public class WebAppController {
     }
 
     @Operation(summary = "Crée un nouveau client dans la base de données", description = "Requête pour crée/ajouter client dans la base de données")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Opération réussi", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "{\n" + "    \"success\": true,\n" + "    \"message\": \"Votre client a été ajoutée !\"\n" + "}"))), @ApiResponse(responseCode = "405", description = "Échec de l'opération ", content = @Content(mediaType = "application/json", examples = {@ExampleObject(name = "Erreur de license", value = "{\n" + "    \"success\": false,\n" + "    \"message\": \"Cet licenses existe deja !\"\n" + "}"), @ExampleObject(name = "Erreur générale", value = "{\n" + "    \"success\": false,\n" + "    \"message\": \"Votre client n'a pas été ajoutée !\"\n" + "}")}))})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Opération réussi", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "{\n" + "    \"success\": true,\n" + "    \"message\": \"Votre client a été ajoutée !\"\n" + "}"))), @ApiResponse(responseCode = "405", description = "Échec de l'opération ", content = @Content(mediaType = "application/json", examples = {@ExampleObject(name = "Erreur de license", value = "{\n" + "    \"success\": false,\n" + "    \"message\": \"La license du prénommé client existe deja dans la base de données !\"\n" + "}"), @ExampleObject(name = "Erreur générale", value = "{\n" + "    \"success\": false,\n" + "    \"message\": \"Votre client n'a pas été ajoutée !\"\n" + "}")}))})
     @RequestMapping(value = "/clients", method = RequestMethod.POST)
     public ResponseEntity<Map<String, Object>> addClientPost(@Validated @RequestBody Client client) {
         Map<String, Object> response = new HashMap<>();
