@@ -63,7 +63,7 @@ public class ClientService {
         client.setFirstName("Jean");
         client.setLastName("Dupont");
         client.setNumberlicense("1234567890123");
-        client.setBirthday(LocalDate.parse("1985-03-15"));
+        client.setBirthday(LocalDate.parse("1965-03-15"));
         client.setObtaining_license(2010);
         clientDao.save(client);
     }
@@ -74,7 +74,7 @@ public class ClientService {
         client.setLastName("Martin");
         client.setNumberlicense("9876543210987");
         client.setBirthday(LocalDate.parse("1992-07-22"));
-        client.setObtaining_license(0);
+        client.setObtaining_license(2005);
         clientDao.save(client);
     }
 
@@ -93,7 +93,7 @@ public class ClientService {
         client.setFirstName("Sophie");
         client.setLastName("Leclerc");
         client.setNumberlicense("1111222233334");
-        client.setBirthday(LocalDate.parse("1995-09-30"));
+        client.setBirthday(LocalDate.parse("2020-09-30"));
         client.setObtaining_license(1999);
         clientDao.save(client);
     }
